@@ -76,7 +76,7 @@ handler (Created False path) = do
           case p of
             Nothing -> putStrLn $ "failed to parse users-list file " ++ pathStr
             Just new@(timestamp, cur) -> do
-              if oldTimestamp >= timestamp
+              if oldTimestamp > timestamp
                 then putStrLn $ "Ignoring new file with timestamp " ++ timestamp ++ " (older than " ++ oldTimestamp ++ ")"
                 else do
                   putStrLn $ "Processed userlist from " ++ timestamp
