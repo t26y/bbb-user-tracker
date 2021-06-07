@@ -118,8 +118,13 @@ process (oldts, oldcur, oldgone) (newts, newcur) = (joined, rejoined, newgone)
 parseUserList :: String -> Maybe (String, [String])
 parseUserList str = mzip (ts (lines str)) (nub <$> cur (map trim (drop 3 (lines str))))
   where
+    timestampInLine :: String -> Maybe String
+    timestampInLine line = case take 13 str of
+                        "List of users" -> safeLast (init (words line))
+                        "Liste der Tei" -> safeLast (words line)
+                        _ -> trace "language not recognized, guessing german (timestamp without AM/PM)" safeLast (words line)
     ts :: [String] -> Maybe String
-    ts (l : _) = safeLast (words l)
+    ts (l : _) = timestampInLine l
     ts _ = trace "userlist error b" Nothing
     cur :: [String] -> Maybe [String]
     cur [] = trace "userlist error a" Nothing -- no user list in file
