@@ -96,6 +96,7 @@ handler e = do
 
 printChanges :: [String] -> [String] -> [String] -> [(String, String)] -> IO ()
 printChanges j r g o = do
+  when (all null [j, r, g]) $ putStrLn "Nothing changed in this update"
   unless (null j) (putStrLn $ "These users joined:\n" ++ unlines j)
   unless (null r) (putStrLn $ "These users reconnected:\n" ++ unlines r)
   unless (null g) (putStrLn $ "These users left:\n" ++ unlines g)
@@ -120,9 +121,9 @@ parseUserList str = mzip (ts (lines str)) (nub <$> cur (map trim (drop 3 (lines 
   where
     timestampInLine :: String -> Maybe String
     timestampInLine line = case take 13 str of
-                        "List of users" -> safeLast (init (words line))
-                        "Liste der Tei" -> safeLast (words line)
-                        _ -> trace "language not recognized, guessing german (timestamp without AM/PM)" safeLast (words line)
+      "List of users" -> safeLast (init (words line))
+      "Liste der Tei" -> safeLast (words line)
+      _ -> trace "language not recognized, guessing german (timestamp without AM/PM)" safeLast (words line)
     ts :: [String] -> Maybe String
     ts (l : _) = timestampInLine l
     ts _ = trace "userlist error b" Nothing
