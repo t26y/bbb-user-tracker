@@ -16,7 +16,7 @@ These users joined:
 Guest a
 
 These users reconnected:
-Geust b
+Guest b
 
 These users left:
 Guest c
